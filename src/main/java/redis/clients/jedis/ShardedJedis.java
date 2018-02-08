@@ -41,7 +41,7 @@ public class ShardedJedis extends BinaryShardedJedis implements JedisCommands, C
   }
 
   @Override
-  public List<Object> xRead(String stream, int count, String offset) {
+  public List<StreamMessage> xRead(String stream, int count, String offset) {
     Jedis j = getShard(stream);
     return j.xRead(stream, count, offset);
   }
