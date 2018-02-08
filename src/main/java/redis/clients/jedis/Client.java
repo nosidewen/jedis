@@ -1,11 +1,10 @@
 package redis.clients.jedis;
 
+import static redis.clients.jedis.Protocol.Command.XADD;
+import static redis.clients.jedis.Protocol.Command.XREAD;
 import static redis.clients.jedis.Protocol.toByteArray;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
 
 import javax.net.ssl.HostnameVerifier;
@@ -13,6 +12,7 @@ import javax.net.ssl.SSLParameters;
 import javax.net.ssl.SSLSocketFactory;
 
 import redis.clients.jedis.commands.Commands;
+import redis.clients.jedis.commands.ProtocolCommand;
 import redis.clients.jedis.params.GeoRadiusParam;
 import redis.clients.jedis.params.SetParams;
 import redis.clients.jedis.params.ZAddParams;
@@ -41,6 +41,36 @@ public class Client extends BinaryClient implements Commands {
       final SSLSocketFactory sslSocketFactory, final SSLParameters sslParameters,
       final HostnameVerifier hostnameVerifier) {
     super(host, port, ssl, sslSocketFactory, sslParameters, hostnameVerifier);
+  }
+
+  @Override
+  public void xadd(String stream, Map<String, String> map) {
+
+    List<String> args = new LinkedList<>();
+
+    args.add(stream);
+    args.add("*");
+
+    for (Entry<String, String> entry : map.entrySet()) {
+      args.add(entry.getKey());
+      args.add(entry.getValue());
+    }
+
+    String[] array = args.toArray(new String [args.size()]);
+    sendCommand(XADD, SafeEncoder.encodeMany(array));
+  }
+
+  @Override
+  public void xRead(String stream, int count, String offset) {
+    String[] args = new String[5];
+
+    args[0] = "COUNT";
+    args[1] = Integer.toString(count);
+    args[2] = "STREAMS";
+    args[3] = stream;
+    args[4] = offset;
+
+    sendCommand(XREAD, SafeEncoder.encodeMany(args));
   }
 
   @Override

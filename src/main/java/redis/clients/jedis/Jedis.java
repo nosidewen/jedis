@@ -132,6 +132,20 @@ public class Jedis extends BinaryJedis implements JedisCommands, MultiKeyCommand
     return client.getBulkReply();
   }
 
+  @Override
+  public String xadd(String stream, Map<String, String> map) {
+    checkIsInMultiOrPipeline();
+    client.xadd(stream, map);
+    return client.getStatusCodeReply();
+  }
+
+  @Override
+    public List<Object> xRead(String stream, int count, String offset) {
+    checkIsInMultiOrPipeline();
+    client.xRead(stream, count, offset);
+    return client.getRawObjectMultiBulkReply();
+  }
+
   /**
    * Set the string value as value of the key. The string can't be longer than 1073741824 bytes (1
    * GB).

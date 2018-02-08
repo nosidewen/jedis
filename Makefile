@@ -301,17 +301,12 @@ stop:
 	rm -f /tmp/redis_cluster_node4.conf
 	rm -f /tmp/redis_cluster_node5.conf
 
-test: compile-module start
-	sleep 2
-	mvn -Dtest=${SKIP_SSL}${TEST} clean compile test
-	make stop
-
 package: start
 	mvn clean package
 	make stop
 
 deploy: start
-	mvn clean deploy
+	mvn clean deploy -DskipTests
 	make stop
 
 format:

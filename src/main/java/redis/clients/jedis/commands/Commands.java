@@ -13,6 +13,10 @@ import redis.clients.jedis.params.ZIncrByParams;
 
 public interface Commands {
 
+  void xadd(String stream, Map<String, String> map);
+
+  void xRead(String stream, int count, String offset);
+
   void set(String key, String value);
 
   void set(String key, String value, SetParams params);

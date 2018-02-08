@@ -14,6 +14,10 @@ import redis.clients.jedis.params.ZIncrByParams;
  * Common interface for sharded and non-sharded Jedis
  */
 public interface JedisCommands {
+  String xadd(String stream, Map<String, String> map);
+
+  List<Object> xRead(String stream, int count, String offset);
+
   String set(String key, String value);
 
   String set(String key, String value, SetParams params);
