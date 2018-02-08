@@ -33,7 +33,7 @@ final class StreamMessageProcessor {
 
                 List<Object> entryData = (List<Object>) entry;
 
-                String id = SafeEncoder.encode((byte[]) entryData.get(0));
+                String offset = SafeEncoder.encode((byte[]) entryData.get(0));
 
                 List<Object> keyValueData = (List<Object>) entryData.get(1);
 
@@ -47,7 +47,7 @@ final class StreamMessageProcessor {
                     data.put(SafeEncoder.encode((byte[]) keyValueData.get(i)), SafeEncoder.encode((byte[]) keyValueData.get(i + 1)));
                 }
 
-                messages.add(new StreamMessage(stream, id, data));
+                messages.add(new StreamMessage(stream, offset, data));
             }
         }
 

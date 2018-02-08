@@ -5,12 +5,12 @@ import java.util.Map;
 public class StreamMessage {
 
     private final String stream;
-    private final String id;
+    private final String offset;
     private final Map<String, String> data;
 
-    public StreamMessage(String stream, String id, Map<String, String> data) {
+    StreamMessage(String stream, String offset, Map<String, String> data) {
         this.stream = stream;
-        this.id = id;
+        this.offset = offset;
         this.data = data;
     }
 
@@ -18,8 +18,8 @@ public class StreamMessage {
         return stream;
     }
 
-    public String getId() {
-        return id;
+    public String getOffset() {
+        return offset;
     }
 
     public Map<String, String> getData() {

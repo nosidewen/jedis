@@ -61,16 +61,25 @@ public class Client extends BinaryClient implements Commands {
   }
 
   @Override
-  public void xRead(String stream, int count, String offset) {
-    String[] args = new String[5];
+  public void xRead(XReadArgs args) {
 
-    args[0] = "COUNT";
-    args[1] = Integer.toString(count);
-    args[2] = "STREAMS";
-    args[3] = stream;
-    args[4] = offset;
+    List<String> commandArgs = new LinkedList<>();
 
-    sendCommand(XREAD, SafeEncoder.encodeMany(args));
+    if (args.block) {
+      commandArgs.add("BLOCK");
+      commandArgs.add(Long.toString(args.blockDuration));
+    }
+
+    if (args.count > 0) {
+      commandArgs.add("COUNT");
+      commandArgs.add(Integer.toString(args.count));
+    }
+
+    commandArgs.add("STREAMS");
+    commandArgs.addAll(args.streams);
+    commandArgs.addAll(args.offsets);
+
+    sendCommand(XREAD, SafeEncoder.encodeMany(commandArgs.toArray(new String[commandArgs.size()])));
   }
 
   @Override

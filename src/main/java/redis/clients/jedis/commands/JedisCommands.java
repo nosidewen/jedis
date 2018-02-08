@@ -16,7 +16,7 @@ import redis.clients.jedis.params.ZIncrByParams;
 public interface JedisCommands {
   String xadd(String stream, Map<String, String> map);
 
-  List<StreamMessage> xRead(String stream, int count, String offset);
+  List<StreamMessage> xRead(XReadArgs.Builder builder);
 
   String set(String key, String value);
 

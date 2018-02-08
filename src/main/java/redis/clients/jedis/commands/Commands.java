@@ -2,11 +2,7 @@ package redis.clients.jedis.commands;
 
 import java.util.Map;
 
-import redis.clients.jedis.BitOP;
-import redis.clients.jedis.ListPosition;
-import redis.clients.jedis.ScanParams;
-import redis.clients.jedis.SortingParams;
-import redis.clients.jedis.ZParams;
+import redis.clients.jedis.*;
 import redis.clients.jedis.params.SetParams;
 import redis.clients.jedis.params.ZAddParams;
 import redis.clients.jedis.params.ZIncrByParams;
@@ -15,7 +11,7 @@ public interface Commands {
 
   void xadd(String stream, Map<String, String> map);
 
-  void xRead(String stream, int count, String offset);
+  void xRead(XReadArgs args);
 
   void set(String key, String value);
 

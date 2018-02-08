@@ -140,9 +140,9 @@ public class Jedis extends BinaryJedis implements JedisCommands, MultiKeyCommand
   }
 
   @Override
-    public List<StreamMessage> xRead(String stream, int count, String offset) {
+    public List<StreamMessage> xRead(XReadArgs.Builder builder) {
     checkIsInMultiOrPipeline();
-    client.xRead(stream, count, offset);
+    client.xRead(builder.build());
     return StreamMessageProcessor.process(client.getRawObjectMultiBulkReply());
   }
 
