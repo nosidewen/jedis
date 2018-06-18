@@ -7,11 +7,11 @@ import java.util.List;
 
 public class XReadArgs {
 
-    final List<String> streams;
-    final List<String> offsets;
-    final int count;
-    final boolean block;
-    final long blockDuration;
+    public final List<String> streams;
+    public final List<String> offsets;
+    public final int count;
+    public final boolean block;
+    public final long blockDuration;
 
     private XReadArgs(List<String> streams, List<String> offsets, int count, boolean block, long blockDuration) {
         this.streams = streams;

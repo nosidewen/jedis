@@ -8,7 +8,7 @@ public class StreamMessage {
     private final String offset;
     private final Map<String, String> data;
 
-    StreamMessage(String stream, String offset, Map<String, String> data) {
+    public StreamMessage(String stream, String offset, Map<String, String> data) {
         this.stream = stream;
         this.offset = offset;
         this.data = data;

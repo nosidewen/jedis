@@ -4,6 +4,7 @@ import static redis.clients.jedis.Protocol.Command.XADD;
 import static redis.clients.jedis.Protocol.Command.XREAD;
 import static redis.clients.jedis.Protocol.toByteArray;
 
+import java.net.Socket;
 import java.util.*;
 import java.util.Map.Entry;
 
@@ -27,6 +28,10 @@ public class Client extends BinaryClient implements Commands {
 
   public Client(final String host) {
     super(host);
+  }
+
+  public Client(final Socket socket) {
+    super(socket);
   }
 
   public Client(final String host, final int port) {

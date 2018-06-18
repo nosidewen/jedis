@@ -302,7 +302,7 @@ stop:
 	rm -f /tmp/redis_cluster_node5.conf
 
 package: start
-	mvn clean package
+	mvn clean package -DskipTests
 	make stop
 
 deploy: start

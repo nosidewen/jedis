@@ -1,5 +1,6 @@
 package redis.clients.jedis;
 
+import java.net.Socket;
 import java.net.URI;
 import java.util.AbstractMap;
 import java.util.ArrayList;
@@ -35,6 +36,10 @@ public class Jedis extends BinaryJedis implements JedisCommands, MultiKeyCommand
 
   public Jedis() {
     super();
+  }
+
+  public Jedis(Socket socket) {
+    super(socket);
   }
 
   public Jedis(final String host) {
