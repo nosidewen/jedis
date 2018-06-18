@@ -45,6 +45,17 @@ public class Connection implements Closeable {
     this.host = host;
   }
 
+  public Connection(final Socket socket) {
+    super();
+    this.socket = socket;
+    try {
+            outputStream = new RedisOutputStream(socket.getOutputStream());
+            inputStream = new RedisInputStream(socket.getInputStream());
+        } catch(IOException e){
+            throw new JedisConnectionException("Could not connect.", e);
+        }
+  }
+
   public Connection(final String host, final int port) {
     this.host = host;
     this.port = port;
@@ -227,7 +238,7 @@ public class Connection implements Closeable {
   }
 
   public boolean isConnected() {
-    return socket != null && socket.isBound() && !socket.isClosed() && socket.isConnected()
+    return socket != null && !socket.isClosed() && socket.isConnected()
         && !socket.isInputShutdown() && !socket.isOutputShutdown();
   }
 

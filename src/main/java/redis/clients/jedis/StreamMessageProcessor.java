@@ -14,6 +14,10 @@ final class StreamMessageProcessor {
 
         List<StreamMessage> messages = new LinkedList<>();
 
+        if (rawData == null || rawData.isEmpty()) {
+            return messages;
+        }
+
         for (Object o : rawData) {
 
             List<Object> innerData = (List<Object>) o;
