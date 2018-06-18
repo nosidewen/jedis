@@ -83,7 +83,7 @@ public class XReadArgs {
                 throw new JedisDataException("Must at least 1 stream!");
             }
 
-            List<String> streamsAndOffsets = new ArrayList<>(streams.size());
+            List<String> streamsAndOffsets = new ArrayList<>(streams.size() + offsets.size());
             streamsAndOffsets.addAll(streams);
             streamsAndOffsets.addAll(offsets);
             return new XReadArgs(streamsAndOffsets, count, block, blockDuration);
