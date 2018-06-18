@@ -22,8 +22,20 @@ import redis.clients.util.SafeEncoder;
 
 public class Client extends BinaryClient implements Commands {
 
-  private final ThreadLocal<List<String>> xaddCommandArgs = ThreadLocal.withInitial(ArrayList::new);
-  private final ThreadLocal<List<String>> xreadCommandArgs = ThreadLocal.withInitial(ArrayList::new);
+  @SuppressWarnings("AnonymousHasLambdaAlternative")
+  private final ThreadLocal<List<String>> xaddCommandArgs = new ThreadLocal<List<String>>() {
+    @Override
+    protected List<String> initialValue() {
+      return new ArrayList<>();
+    }
+  };
+  @SuppressWarnings("AnonymousHasLambdaAlternative")
+  private final ThreadLocal<List<String>> xreadCommandArgs = new ThreadLocal<List<String>>() {
+    @Override
+    protected List<String> initialValue() {
+      return new ArrayList<>();
+    }
+  };
 
   public Client() {
     super();
