@@ -22,6 +22,9 @@ import redis.clients.util.SafeEncoder;
 
 public class Client extends BinaryClient implements Commands {
 
+  private final ThreadLocal<List<String>> xaddCommandArgs = ThreadLocal.withInitial(ArrayList::new);
+  private final ThreadLocal<List<String>> xreadCommandArgs = ThreadLocal.withInitial(ArrayList::new);
+
   public Client() {
     super();
   }
@@ -51,7 +54,8 @@ public class Client extends BinaryClient implements Commands {
   @Override
   public void xadd(String stream, Map<String, String> map) {
 
-    List<String> args = new LinkedList<>();
+    List<String> args = xaddCommandArgs.get();
+    args.clear();
 
     args.add(stream);
     args.add("*");
@@ -61,14 +65,16 @@ public class Client extends BinaryClient implements Commands {
       args.add(entry.getValue());
     }
 
-    String[] array = args.toArray(new String [args.size()]);
+    //noinspection ToArrayCallWithZeroLengthArrayArgument
+    String[] array = args.toArray(new String[args.size()]);
     sendCommand(XADD, SafeEncoder.encodeMany(array));
   }
 
   @Override
   public void xRead(XReadArgs args) {
 
-    List<String> commandArgs = new LinkedList<>();
+    List<String> commandArgs = xreadCommandArgs.get();
+    commandArgs.clear();
 
     if (args.block) {
       commandArgs.add("BLOCK");
@@ -84,7 +90,9 @@ public class Client extends BinaryClient implements Commands {
     commandArgs.addAll(args.streams);
     commandArgs.addAll(args.offsets);
 
-    sendCommand(XREAD, SafeEncoder.encodeMany(commandArgs.toArray(new String[commandArgs.size()])));
+    //noinspection ToArrayCallWithZeroLengthArrayArgument
+    String[] array = commandArgs.toArray(new String[commandArgs.size()]);
+    sendCommand(XREAD, SafeEncoder.encodeMany(array));
   }
 
   @Override
