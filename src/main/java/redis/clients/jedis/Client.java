@@ -99,8 +99,7 @@ public class Client extends BinaryClient implements Commands {
     }
 
     commandArgs.add("STREAMS");
-    commandArgs.addAll(args.streams);
-    commandArgs.addAll(args.offsets);
+    commandArgs.addAll(args.streamsAndOffsets);
 
     //noinspection ToArrayCallWithZeroLengthArrayArgument
     String[] array = commandArgs.toArray(new String[commandArgs.size()]);

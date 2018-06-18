@@ -2,20 +2,28 @@ package redis.clients.jedis;
 
 import redis.clients.jedis.exceptions.JedisDataException;
 
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 public class XReadArgs {
 
-    public final List<String> streams;
-    public final List<String> offsets;
+    public final List<String> streamsAndOffsets;
     public final int count;
     public final boolean block;
     public final long blockDuration;
 
-    private XReadArgs(List<String> streams, List<String> offsets, int count, boolean block, long blockDuration) {
-        this.streams = streams;
-        this.offsets = offsets;
+    /**
+     * Creates simple XReadArgs object.
+     * @param streamsAndOffsets List of stream names and offsets... stream names first, offsets second.
+     */
+    public XReadArgs(List<String> streamsAndOffsets) {
+        this.streamsAndOffsets = streamsAndOffsets;
+        this.count = 0;
+        this.block = false;
+        this.blockDuration = 0;
+    }
+
+    private XReadArgs(List<String> streamsAndOffsets, int count, boolean block, long blockDuration) {
+        this.streamsAndOffsets = streamsAndOffsets;
         this.count = count;
         this.block = block;
         this.blockDuration = blockDuration;
@@ -27,13 +35,19 @@ public class XReadArgs {
 
     public static class Builder {
 
-        private final List<String> streams = new LinkedList<>();
-        private final List<String> offsets = new LinkedList<>();
+        private final List<String> streams = new ArrayList<>();
+        private final List<String> offsets = new ArrayList<>();
         private int count;
         private boolean block;
         private long blockDuration;
 
         private Builder() {
+        }
+
+        public Builder clearStreams() {
+            streams.clear();
+            offsets.clear();
+            return this;
         }
 
         public Builder add(String stream, String offset) {
@@ -69,7 +83,10 @@ public class XReadArgs {
                 throw new JedisDataException("Must at least 1 stream!");
             }
 
-            return new XReadArgs(streams, offsets, count, block, blockDuration);
+            List<String> streamsAndOffsets = new ArrayList<>(streams.size());
+            streamsAndOffsets.addAll(streams);
+            streamsAndOffsets.addAll(offsets);
+            return new XReadArgs(streamsAndOffsets, count, block, blockDuration);
         }
     }
 }
