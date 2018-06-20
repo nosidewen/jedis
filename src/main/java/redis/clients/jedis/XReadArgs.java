@@ -31,7 +31,16 @@ public class XReadArgs {
 
     public void setStreamsAndOffsets(List<String> streamsAndOffsets) {
         this.streamsAndOffsets.clear();
-        this.streamsAndOffsets.addAll(streamsAndOffsets);
+        if (streamsAndOffsets.size() < 50) {
+            // If the incoming value is small enough, let's opt to iterate with .add to copy it into the XReadArgs and
+            // save on the allocations.
+            for (String s : streamsAndOffsets) {
+                //noinspection UseBulkOperation
+                this.streamsAndOffsets.add(s);
+            }
+        } else {
+            this.streamsAndOffsets.addAll(streamsAndOffsets);
+        }
     }
 
     public String getKey() {
