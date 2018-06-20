@@ -99,7 +99,17 @@ public class Client extends BinaryClient implements Commands {
     }
 
     commandArgs.add("STREAMS");
-    commandArgs.addAll(args.streamsAndOffsets);
+
+    if (args.streamsAndOffsets.size() < 50) {
+      for (String arg : args.streamsAndOffsets) {
+        // we will ignore the lint error suggesting we use the bulk op, because the bulk op incurs more allocation overhead
+        // than necessary, and the loop itself is only operating over a small-ish amount of items.
+        //noinspection UseBulkOperation
+        commandArgs.add(arg);
+      }
+    } else {
+      commandArgs.addAll(args.streamsAndOffsets);
+    }
 
     //noinspection ToArrayCallWithZeroLengthArrayArgument
     String[] array = commandArgs.toArray(new String[commandArgs.size()]);
