@@ -22,6 +22,21 @@ import redis.clients.util.SafeEncoder;
 
 public class Client extends BinaryClient implements Commands {
 
+  @SuppressWarnings("AnonymousHasLambdaAlternative")
+  private final ThreadLocal<List<String>> xaddCommandArgs = new ThreadLocal<List<String>>() {
+    @Override
+    protected List<String> initialValue() {
+      return new ArrayList<>();
+    }
+  };
+  @SuppressWarnings("AnonymousHasLambdaAlternative")
+  private final ThreadLocal<List<String>> xreadCommandArgs = new ThreadLocal<List<String>>() {
+    @Override
+    protected List<String> initialValue() {
+      return new ArrayList<>();
+    }
+  };
+
   public Client() {
     super();
   }
@@ -51,7 +66,8 @@ public class Client extends BinaryClient implements Commands {
   @Override
   public void xadd(String stream, Map<String, String> map) {
 
-    List<String> args = new LinkedList<>();
+    List<String> args = xaddCommandArgs.get();
+    args.clear();
 
     args.add(stream);
     args.add("*");
@@ -61,14 +77,16 @@ public class Client extends BinaryClient implements Commands {
       args.add(entry.getValue());
     }
 
-    String[] array = args.toArray(new String [args.size()]);
+    //noinspection ToArrayCallWithZeroLengthArrayArgument
+    String[] array = args.toArray(new String[args.size()]);
     sendCommand(XADD, SafeEncoder.encodeMany(array));
   }
 
   @Override
   public void xRead(XReadArgs args) {
 
-    List<String> commandArgs = new LinkedList<>();
+    List<String> commandArgs = xreadCommandArgs.get();
+    commandArgs.clear();
 
     if (args.block) {
       commandArgs.add("BLOCK");
@@ -81,10 +99,21 @@ public class Client extends BinaryClient implements Commands {
     }
 
     commandArgs.add("STREAMS");
-    commandArgs.addAll(args.streams);
-    commandArgs.addAll(args.offsets);
 
-    sendCommand(XREAD, SafeEncoder.encodeMany(commandArgs.toArray(new String[commandArgs.size()])));
+    if (args.streamsAndOffsets.size() < 50) {
+      for (String arg : args.streamsAndOffsets) {
+        // we will ignore the lint error suggesting we use the bulk op, because the bulk op incurs more allocation overhead
+        // than necessary, and the loop itself is only operating over a small-ish amount of items.
+        //noinspection UseBulkOperation
+        commandArgs.add(arg);
+      }
+    } else {
+      commandArgs.addAll(args.streamsAndOffsets);
+    }
+
+    //noinspection ToArrayCallWithZeroLengthArrayArgument
+    String[] array = commandArgs.toArray(new String[commandArgs.size()]);
+    sendCommand(XREAD, SafeEncoder.encodeMany(array));
   }
 
   @Override
