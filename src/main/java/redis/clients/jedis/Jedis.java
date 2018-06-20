@@ -144,10 +144,16 @@ public class Jedis extends BinaryJedis implements JedisCommands, MultiKeyCommand
     return client.getStatusCodeReply();
   }
 
+  @Deprecated
   @Override
-    public List<StreamMessage> xRead(XReadArgs.Builder builder) {
+  public List<StreamMessage> xRead(XReadArgs.Builder builder) {
+      return xRead(builder.build());
+  }
+
+  @Override
+  public List<StreamMessage> xRead(XReadArgs args) {
     checkIsInMultiOrPipeline();
-    client.xRead(builder.build());
+    client.xRead(args);
     return StreamMessageProcessor.process(client.getRawObjectMultiBulkReply());
   }
 

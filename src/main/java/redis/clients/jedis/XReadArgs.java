@@ -34,6 +34,22 @@ public class XReadArgs {
         this.streamsAndOffsets.addAll(streamsAndOffsets);
     }
 
+    public String getKey() {
+        StringBuilder stringBuilder = new StringBuilder();
+
+        int size = streamsAndOffsets.size();
+        int i = 0;
+        for (String s : streamsAndOffsets) {
+            if (i == size / 2) {
+                break;
+            }
+            stringBuilder.append(s);
+            i++;
+        }
+
+        return stringBuilder.toString();
+    }
+
     public void setCount(int count) {
         this.count = count;
     }
