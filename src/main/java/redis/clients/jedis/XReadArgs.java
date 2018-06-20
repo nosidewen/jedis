@@ -7,9 +7,9 @@ import java.util.*;
 public class XReadArgs {
 
     public final List<String> streamsAndOffsets;
-    public final int count;
-    public final boolean block;
-    public final long blockDuration;
+    public int count;
+    public boolean block;
+    public long blockDuration;
 
     /**
      * Creates simple XReadArgs object.
@@ -26,6 +26,23 @@ public class XReadArgs {
         this.streamsAndOffsets = streamsAndOffsets;
         this.count = count;
         this.block = block;
+        this.blockDuration = blockDuration;
+    }
+
+    public void setStreamsAndOffsets(List<String> streamsAndOffsets) {
+        this.streamsAndOffsets.clear();
+        this.streamsAndOffsets.addAll(streamsAndOffsets);
+    }
+
+    public void setCount(int count) {
+        this.count = count;
+    }
+
+    public void setBlock(boolean block) {
+        this.block = block;
+    }
+
+    public void setBlockDuration(long blockDuration) {
         this.blockDuration = blockDuration;
     }
 
