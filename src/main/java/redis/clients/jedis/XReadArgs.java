@@ -30,6 +30,10 @@ public class XReadArgs {
     }
 
     public void setStreamsAndOffsets(List<String> streamsAndOffsets) {
+        if (streamsAndOffsets.size() % 2 != 0) {
+            throw new IllegalArgumentException("An even number of elements is required for streamsAndOffsets.");
+        }
+
         this.streamsAndOffsets.clear();
         if (streamsAndOffsets.size() < 50) {
             // If the incoming value is small enough, let's opt to iterate with .add to copy it into the XReadArgs and
@@ -41,6 +45,18 @@ public class XReadArgs {
         } else {
             this.streamsAndOffsets.addAll(streamsAndOffsets);
         }
+    }
+
+    public String getStreamName(int index) {
+        return streamsAndOffsets.get(index);
+    }
+
+    public String getOffset(int index) {
+        return streamsAndOffsets.get(index + streamsAndOffsets.size() / 2);
+    }
+
+    public int getStreamCount() {
+        return streamsAndOffsets.size() / 2;
     }
 
     public String getKey() {
