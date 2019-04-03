@@ -38,9 +38,9 @@ public class XReadArgs {
         if (streamsAndOffsets.size() < 50) {
             // If the incoming value is small enough, let's opt to iterate with .add to copy it into the XReadArgs and
             // save on the allocations.
-            for (String s : streamsAndOffsets) {
+            for (int i = 0; i < streamsAndOffsets.size(); i++) {
                 //noinspection UseBulkOperation
-                this.streamsAndOffsets.add(s);
+                this.streamsAndOffsets.add(streamsAndOffsets.get(i));
             }
         } else {
             this.streamsAndOffsets.addAll(streamsAndOffsets);
